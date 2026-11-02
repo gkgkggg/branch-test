@@ -1,0 +1,284 @@
+Lecture 9 - Real GitHub remote collaboration exercise
+Remote: https://github.com/gkgkggg/branch-test.git
+Two working copies simulate developer and teammate roles on one account.
+
+[Lab9-branch-test] $ git status --porcelain
+Exit code: 0
+
+
+[output] $ git clone https://github.com/gkgkggg/branch-test.git <workspace>/output/Lab9-branch-new
+Exit code: 0
+Cloning into '<workspace>/output/Lab9-branch-new'...
+
+[Lab9-branch-new] $ git status --porcelain
+Exit code: 0
+ M README.md
+ M edition.txt
+ M new_feature.txt
+
+[Lab9-branch-test] $ git add --renormalize README.md edition.txt new_feature.txt
+Exit code: 0
+
+
+[Lab9-branch-test] $ git write-tree
+Exit code: 0
+c32406c8989d0089286a576bef580d42b7d5611d
+
+[Lab9-branch-test] $ git rev-parse HEAD^{tree}
+Exit code: 0
+c32406c8989d0089286a576bef580d42b7d5611d
+
+[Lab9-branch-test] $ git status --porcelain
+Exit code: 0
+
+
+[Lab9-branch-new] $ git rev-parse HEAD
+Exit code: 0
+529117327e7f58e1b77524be90839ffce9abc354
+
+[Lab9-branch-test] $ git rev-parse HEAD
+Exit code: 0
+529117327e7f58e1b77524be90839ffce9abc354
+
+[Lab9-branch-new] $ git add --renormalize README.md edition.txt new_feature.txt
+Exit code: 0
+
+
+[Lab9-branch-new] $ git write-tree
+Exit code: 0
+c32406c8989d0089286a576bef580d42b7d5611d
+
+[Lab9-branch-new] $ git rev-parse HEAD^{tree}
+Exit code: 0
+c32406c8989d0089286a576bef580d42b7d5611d
+
+[Lab9-branch-new] $ git status --porcelain
+Exit code: 0
+
+
+[output] $ git clone https://github.com/gkgkggg/branch-test.git <workspace>/output/Lab9-team-work
+Exit code: 0
+Cloning into '<workspace>/output/Lab9-team-work'...
+
+[Lab9-team-work] $ git add --renormalize README.md edition.txt new_feature.txt
+Exit code: 0
+
+
+[Lab9-team-work] $ git write-tree
+Exit code: 0
+c32406c8989d0089286a576bef580d42b7d5611d
+
+[Lab9-team-work] $ git rev-parse HEAD^{tree}
+Exit code: 0
+c32406c8989d0089286a576bef580d42b7d5611d
+
+[Lab9-team-work] $ git status --porcelain
+Exit code: 0
+
+
+[Lab9-branch-new] $ git rev-parse HEAD
+Exit code: 0
+529117327e7f58e1b77524be90839ffce9abc354
+
+[Lab9-branch-new] $ git rev-list --count HEAD
+Exit code: 0
+6
+
+[Lab9-branch-new] $ git remote -v
+Exit code: 0
+origin	https://github.com/gkgkggg/branch-test.git (fetch)
+origin	https://github.com/gkgkggg/branch-test.git (push)
+
+[Lab9-branch-new] $ git add edition.txt
+Exit code: 0
+
+
+[Lab9-branch-new] $ git commit -m hotfix my solution
+Exit code: 0
+[main c97f986] hotfix my solution
+ 1 file changed, 1 insertion(+)
+
+[Lab9-branch-new] $ git rev-parse HEAD
+Exit code: 0
+c97f986887d407936dc79142be5fa3d17672f7ce
+
+[Lab9-team-work] $ git add edition.txt
+Exit code: 0
+
+
+[Lab9-team-work] $ git commit -m Hotfix team's solution
+Exit code: 0
+[main 9ddc640] Hotfix team's solution
+ 1 file changed, 1 insertion(+)
+
+[Lab9-team-work] $ git rev-parse HEAD
+Exit code: 0
+9ddc64023c2f5da6ff8e035c3c0657de34eb95fc
+
+[Lab9-team-work] $ git push origin main
+Exit code: 0
+To https://github.com/gkgkggg/branch-test.git
+   5291173..9ddc640  main -> main
+
+[Lab9-branch-new] $ git push origin main
+Exit code: 1
+To https://github.com/gkgkggg/branch-test.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/gkgkggg/branch-test.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
+[Lab9-branch-new] $ git fetch origin
+Exit code: 0
+From https://github.com/gkgkggg/branch-test
+   5291173..9ddc640  main       -> origin/main
+
+[Lab9-branch-new] $ git log --oneline origin/main
+Exit code: 0
+9ddc640 Hotfix team's solution
+5291173 Merge branch 'codex/new-feature'
+0293d5c issue resolved
+bd1ab7f new feature
+7079016 third commit
+d308b0a second commit
+c319050 first commit
+
+[Lab9-branch-new] $ git merge origin/main -m resolved conflict
+Exit code: 1
+Auto-merging edition.txt
+CONFLICT (content): Merge conflict in edition.txt
+Automatic merge failed; fix conflicts and then commit the result.
+
+[Lab9-branch-new] $ git status --short --branch
+Exit code: 0
+## main...origin/main [ahead 1, behind 1]
+UU edition.txt
+
+[Lab9-branch-new] $ git add edition.txt
+Exit code: 0
+
+
+[Lab9-branch-new] $ git commit -m resolved conflict
+Exit code: 0
+[main 630b32f] resolved conflict
+
+[Lab9-branch-new] $ git rev-parse HEAD
+Exit code: 0
+630b32fab2f48e7397cfbd02dd942c013adc7a54
+
+[Lab9-branch-new] $ git show -s --format=%P HEAD
+Exit code: 0
+c97f986887d407936dc79142be5fa3d17672f7ce 9ddc64023c2f5da6ff8e035c3c0657de34eb95fc
+
+[Lab9-branch-new] $ git add edition.txt
+Exit code: 0
+
+
+[Lab9-branch-new] $ git commit -m new function added
+Exit code: 0
+[main fb5f748] new function added
+ 1 file changed, 1 insertion(+)
+
+[Lab9-branch-new] $ git push origin main
+Exit code: 0
+To https://github.com/gkgkggg/branch-test.git
+   9ddc640..fb5f748  main -> main
+
+[Lab9-team-work] $ git pull --ff-only origin main
+Exit code: 0
+Updating 9ddc640..fb5f748
+Fast-forward
+ edition.txt | 1 +
+ 1 file changed, 1 insertion(+)
+From https://github.com/gkgkggg/branch-test
+ * branch            main       -> FETCH_HEAD
+   9ddc640..fb5f748  main       -> origin/main
+
+[Lab9-team-work] $ git add edition.txt
+Exit code: 0
+
+
+[Lab9-team-work] $ git commit -m Upgraded
+Exit code: 0
+[main 4f1eec3] Upgraded
+ 1 file changed, 1 insertion(+)
+
+[Lab9-team-work] $ git push origin main
+Exit code: 0
+To https://github.com/gkgkggg/branch-test.git
+   fb5f748..4f1eec3  main -> main
+
+[Lab9-branch-new] $ git pull --ff-only origin main
+Exit code: 0
+Updating fb5f748..4f1eec3
+Fast-forward
+ edition.txt | 1 +
+ 1 file changed, 1 insertion(+)
+From https://github.com/gkgkggg/branch-test
+ * branch            main       -> FETCH_HEAD
+   fb5f748..4f1eec3  main       -> origin/main
+
+[Lab9-branch-new] $ git rev-parse HEAD
+Exit code: 0
+4f1eec36e59e763ae0a994dbdd7dacfbc25339d6
+
+[Lab9-branch-new] $ git rev-list --count HEAD
+Exit code: 0
+11
+
+[Lab9-branch-new] $ git rev-parse origin/main
+Exit code: 0
+4f1eec36e59e763ae0a994dbdd7dacfbc25339d6
+
+[Lab9-branch-new] $ git status --porcelain
+Exit code: 0
+
+
+[Lab9-branch-new] $ git log --oneline --decorate --graph --all
+Exit code: 0
+* 4f1eec3 (HEAD -> main, origin/main, origin/HEAD) Upgraded
+* fb5f748 new function added
+*   630b32f resolved conflict
+|\  
+| * 9ddc640 Hotfix team's solution
+* | c97f986 hotfix my solution
+|/  
+*   5291173 Merge branch 'codex/new-feature'
+|\  
+| * bd1ab7f new feature
+* | 0293d5c issue resolved
+|/  
+* 7079016 third commit
+* d308b0a second commit
+* c319050 first commit
+
+Conflict markers observed before resolution:
+first edition
+second edition
+third edition
+issue resolved
+<<<<<<< HEAD
+hotfix my solution
+=======
+Hotfix team's solution
+>>>>>>> origin/main
+
+Lecture graph after synchronization (11 commits):
+* 4f1eec3 (HEAD -> main, origin/main, origin/HEAD) Upgraded
+* fb5f748 new function added
+*   630b32f resolved conflict
+|\  
+| * 9ddc640 Hotfix team's solution
+* | c97f986 hotfix my solution
+|/  
+*   5291173 Merge branch 'codex/new-feature'
+|\  
+| * bd1ab7f new feature
+* | 0293d5c issue resolved
+|/  
+* 7079016 third commit
+* d308b0a second commit
+* c319050 first commit

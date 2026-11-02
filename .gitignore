@@ -1,0 +1,11 @@
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
